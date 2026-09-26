@@ -1,6 +1,9 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
