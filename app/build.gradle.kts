@@ -37,18 +37,48 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-    
     buildFeatures {
         compose = true
     }
     
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            resources.excludes.add("META-INF/kotlinx_coroutines_core.version")
+
+            // The part below is only needed for compose builds.
+            // This packaging block is required to solve interdependency conflicts.
+            // They arise only when using local maven repo, so I suppose online repos have some way of solving such issues.
+
+            // Caused by: com.android.builder.merge.DuplicateRelativeFileException: 4 files found with path 'commonMain/default/linkdata/module' from inputs:
+            // - AndroidIDE\libs_source\gradle\localMvnRepository\androidx\collection\collection\1.4.2\collection-1.4.2.jar
+            // - AndroidIDE\libs_source\gradle\localMvnRepository\androidx\lifecycle\lifecycle-common\2.8.7\lifecycle-common-2.8.7.jar
+            // - AndroidIDE\libs_source\gradle\localMvnRepository\androidx\annotation\annotation\1.8.1\annotation-1.8.1.jar
+            // - AndroidIDE\libs_source\gradle\localMvnRepository\org\jetbrains\kotlinx\kotlinx-coroutines-core\1.7.3\kotlinx-coroutines-core-1.7.3.jar
+            // And some others.
+            resources.pickFirsts.add("nonJvmMain/default/linkdata/package_androidx/0_androidx.knm")
+            resources.pickFirsts.add("nonJvmMain/default/linkdata/root_package/0_.knm")
+            resources.pickFirsts.add("nonJvmMain/default/linkdata/module")
+
+            resources.pickFirsts.add("nativeMain/default/linkdata/root_package/0_.knm")
+            resources.pickFirsts.add("nativeMain/default/linkdata/module")
+
+            resources.pickFirsts.add("commonMain/default/linkdata/root_package/0_.knm")
+            resources.pickFirsts.add("commonMain/default/linkdata/module")
+            resources.pickFirsts.add("commonMain/default/linkdata/package_androidx/0_androidx.knm")
+
+            resources.pickFirsts.add("META-INF/kotlin-project-structure-metadata.json")
+
+            resources.merges.add("commonMain/default/manifest")
+            resources.merges.add("nonJvmMain/default/manifest")
+            resources.merges.add("nativeMain/default/manifest")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget("17"))
     }
 }
 
