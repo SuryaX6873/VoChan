@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VoiceChangerTool"
+rootProject.name = "VoChan"
 
 include(":app")

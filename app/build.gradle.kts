@@ -1,17 +1,16 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
     namespace = "com.voicechanger"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.voicechanger"
-        minSdk = 26
-        targetSdk = 34
+        minSdk = 33
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
